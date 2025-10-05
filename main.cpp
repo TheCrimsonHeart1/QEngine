@@ -287,7 +287,19 @@ int main(int argc, char** argv) {
     SetLuaWindow(window);
 
     std::cout << "All systems initialized. Starting main loop..." << std::endl;
+    #if !GAME_MODE
+    // -----------------------------------------------------------
+    //  If GAME_MODE is off (runtime), run main.lua automatically
+    // -----------------------------------------------------------
+    std::string mainScriptPath = (assetFolder / "scripts" / "main.lua").string();
 
+    std::cout << "Running game script: " << mainScriptPath << std::endl;
+
+    if (luaL_dofile(L, mainScriptPath.c_str()) != LUA_OK) {
+        std::cerr << "Lua runtime error: " << lua_tostring(L, -1) << std::endl;
+        lua_pop(L, 1);
+    }
+    #endif
     // Setup input tracking
     std::map<int, bool> keyPresses;
 
@@ -318,7 +330,7 @@ int main(int argc, char** argv) {
 
         // Render sprites
         renderSprites(spriteShader, VAO, sprites);
-
+        #if GAME_MODE
         // Start ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -347,6 +359,7 @@ int main(int argc, char** argv) {
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        #endif
 
         // Swap buffers and poll events
         glfwSwapBuffers(window);

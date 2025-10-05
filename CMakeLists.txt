@@ -64,3 +64,10 @@ target_link_libraries(QEngine PRIVATE
 
 # Correctly link Lua's include directories
 target_include_directories(QEngine PRIVATE ${LUA_INCLUDE_DIR})
+
+option(GAME "Toggles Editor" OFF)
+if(GAME)
+    target_compile_definitions(QEngine PUBLIC GAME_MODE=1)
+else()
+    target_compile_definitions(QEngine PUBLIC GAME_MODE=0)
+endif()

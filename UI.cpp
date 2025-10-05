@@ -17,6 +17,7 @@ extern "C" {
 extern lua_State* L;
 bool RunLuaFile(const std::string& filepath); // forward declaration
 
+#if GAME_MODE
 void RenderGUI(std::vector<Sprite>& sprites) {
     // ==============================
     // Sprite Manager Window
@@ -119,3 +120,4 @@ void RenderGUI(std::vector<Sprite>& sprites) {
 
     ImGui::End(); // End Build & Export
 }
+#endif

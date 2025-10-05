@@ -8,7 +8,9 @@
 extern std::filesystem::path assetFolder;
 extern std::string AssetPath(const std::string& relativePath);
 
+#if GAME_MODE
 void RenderCodeEditor(CodeEditor& editor, const char* title) {
+
     if (!editor.isOpen) return;
 
     static bool showFileBrowser = false; // persists between frames
@@ -88,3 +90,4 @@ void RenderCodeEditor(CodeEditor& editor, const char* title) {
 
     ImGui::End();
 }
+#endif
