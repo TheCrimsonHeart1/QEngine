@@ -2,12 +2,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(QEngine)
 
-# Set up vcpkg toolchain for manifest mode.
-# Recommended approach: create a vcpkg.json manifest file instead
-# and let CMake handle the toolchain file automatically.
-# For manual setup: set(CMAKE_TOOLCHAIN_FILE "/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
-# Use C++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -20,7 +15,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-# Use CMake's FindLua module for locating Lua
+
 find_package(Lua REQUIRED)
 
 # Source files
@@ -53,11 +48,10 @@ target_link_libraries(QEngine PRIVATE
         OpenGL::GL
         GLEW::GLEW
 
-        # Correct way to link Lua using variables from find_package(Lua)
+
         ${LUA_LIBRARIES}
 
-        # The include directories are also needed for the header files
-        # The correct way to include is with target_include_directories\]
+
 
         glm::glm
 )
