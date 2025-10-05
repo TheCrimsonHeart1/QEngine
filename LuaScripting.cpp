@@ -84,6 +84,38 @@ int LuaIsKeyPressed(lua_State* L) {
     return 1;
 }
 
+int ChangeTexture(lua_State* L) {
+    int index = (int)luaL_checkinteger(L, 1);
+    const char* relativePath = luaL_checkstring(L, 2);
+
+    // Validate sprite index
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_pushboolean(L, 0);
+        return 1; // false on invalid index
+    }
+
+    // Resolve full texture path
+    std::string fullPath = relativePath;
+    if (!assetFolder.empty()) {
+        fullPath = AssetPath(relativePath);
+    }
+
+    GLuint newTex = LoadTexture(fullPath.c_str());
+    if (!newTex) {
+        lua_pushboolean(L, 0);
+        return 1; // false on failure
+    }
+
+    // Delete old texture (optional, prevents memory leaks)
+    glDeleteTextures(1, &sprites[index].textureID);
+
+
+    sprites[index].textureID = newTex;
+
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 void SetLuaWindow(GLFWwindow* window) {
     g_window = window;
 }
@@ -92,6 +124,7 @@ void registerLuaFunctions() {
     lua_register(L, "LoadTexture", LuaLoadTexture);
     lua_register(L, "MoveTexture", LuaMoveTexture);
     lua_register(L, "IsKeyPressed", LuaIsKeyPressed);
+    lua_register(L, "ChangeTexture", ChangeTexture);
 }
 
 bool RunLuaFile(const std::string& filepath) {

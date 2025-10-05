@@ -92,7 +92,7 @@ bool initializeOpenGL(GLFWwindow*& window) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create window
-    window = glfwCreateWindow(1920, 1080, "QEngine - 2D Game Engine", nullptr, nullptr);
+    window = glfwCreateWindow(1920, 1080, "QEngine - 2D Game Engine", glfwGetPrimaryMonitor(), nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -260,7 +260,6 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    // Load and compile shaders
     // Load and compile shaders
     Shader spriteShader("sprite.vert", "sprite.frag");
     spriteShader.use();
