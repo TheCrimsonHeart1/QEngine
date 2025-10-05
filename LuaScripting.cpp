@@ -94,7 +94,6 @@ int ChangeTexture(lua_State* L) {
         return 1; // false on invalid index
     }
 
-    // Resolve full texture path
     std::string fullPath = relativePath;
     if (!assetFolder.empty()) {
         fullPath = AssetPath(relativePath);

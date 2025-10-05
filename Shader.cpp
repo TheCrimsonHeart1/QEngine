@@ -66,3 +66,25 @@ void Shader::setMat4(const std::string &name, const float* mat) const {
 void Shader::setVec4(const std::string &name, float x, float y, float z, float w) const {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 }
+Shader::~Shader() {
+    if (ID != 0) {
+        glDeleteProgram(ID);
+    }
+}
+Shader::Shader(Shader&& other) noexcept : ID(other.ID) {
+    other.ID = 0; // Prevent the moved-from object from deleting the program
+}
+
+Shader& Shader::operator=(Shader&& other) noexcept {
+    if (this != &other) {
+        // Clean up our current program
+        if (ID != 0) {
+            glDeleteProgram(ID);
+        }
+
+        // Take ownership of the other's program
+        ID = other.ID;
+        other.ID = 0;
+    }
+    return *this;
+}

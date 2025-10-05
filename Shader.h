@@ -12,7 +12,11 @@ public:
     void setFloat(const std::string &name, float value) const;
     void setMat4(const std::string &name, const float* mat) const;
     void setVec4(const std::string &name, float x, float y, float z, float w) const;  // ADD THIS
-
+    ~Shader();
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
+    Shader(Shader&& other) noexcept;
+    Shader& operator=(Shader&& other) noexcept;
 private:
     std::string loadFile(const std::string& path);
     GLuint compileShader(GLenum type, const std::string& source);
