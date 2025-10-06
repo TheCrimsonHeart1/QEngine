@@ -11,6 +11,7 @@ extern "C" {
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include "Collision.h"
 
 // The sprite vector from your engine (accessible to Lua)
 extern std::vector<Sprite> sprites;
@@ -30,6 +31,87 @@ void initLua() {
 void shutdownLua() {
     lua_close(L);
 }
+
+int LuaCheckCollision(lua_State* L) {
+    int indexA = (int)luaL_checkinteger(L, 1);
+    int indexB = (int)luaL_checkinteger(L, 2);
+
+    if (indexA < 0 || indexA >= (int)sprites.size() ||
+        indexB < 0 || indexB >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+        }
+
+    bool colliding = CollisionManager::CheckCollision(sprites[indexA], sprites[indexB]);
+    lua_pushboolean(L, colliding);
+    return 1;
+}
+int LuaFindCollision(lua_State* L) {
+    int index = (int)luaL_checkinteger(L, 1);
+
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_pushinteger(L, -1);
+        return 1;
+    }
+
+    int collision = CollisionManager::FindFirstCollision(sprites[index], sprites, index);
+    lua_pushinteger(L, collision);
+    return 1;
+}
+int LuaFindAllCollisions(lua_State* L) {
+    int index = (int)luaL_checkinteger(L, 1);
+
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_newtable(L);
+        return 1;
+    }
+
+    std::vector<int> collisions = CollisionManager::FindAllCollisions(sprites[index], sprites, index);
+
+    lua_newtable(L);
+    for (size_t i = 0; i < collisions.size(); i++) {
+        lua_pushinteger(L, collisions[i]);
+        lua_rawseti(L, -2, i + 1);
+    }
+
+    return 1;
+}
+int LuaPointInSprite(lua_State* L) {
+    float x = (float)luaL_checknumber(L, 1);
+    float y = (float)luaL_checknumber(L, 2);
+    int index = (int)luaL_checkinteger(L, 3);
+
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    bool inside = CollisionManager::PointInSprite(x, y, sprites[index]);
+    lua_pushboolean(L, inside);
+    return 1;
+}
+int LuaResolveCollision(lua_State* L) {
+    int indexA = (int)luaL_checkinteger(L, 1);
+    int indexB = (int)luaL_checkinteger(L, 2);
+
+    if (indexA < 0 || indexA >= (int)sprites.size() ||
+        indexB < 0 || indexB >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+        }
+
+    CollisionInfo info;
+    if (CollisionManager::CheckCollision(sprites[indexA], sprites[indexB], info)) {
+        CollisionManager::ResolveCollision(sprites[indexA], sprites[indexB], info);
+        lua_pushboolean(L, true);
+    } else {
+        lua_pushboolean(L, false);
+    }
+
+    return 1;
+}
+
+
 
 // Lua function to load a texture and add it as a sprite
 int LuaLoadTexture(lua_State* L) {
@@ -124,6 +206,12 @@ void registerLuaFunctions() {
     lua_register(L, "MoveTexture", LuaMoveTexture);
     lua_register(L, "IsKeyPressed", LuaIsKeyPressed);
     lua_register(L, "ChangeTexture", ChangeTexture);
+
+    lua_register(L, "CheckCollision", LuaCheckCollision);
+    lua_register(L, "FindCollision", LuaFindCollision);
+    lua_register(L, "FindAllCollisions", LuaFindAllCollisions);
+    lua_register(L, "PointInSprite", LuaPointInSprite);
+    lua_register(L, "ResolveCollision", LuaResolveCollision);
 }
 
 bool RunLuaFile(const std::string& filepath) {

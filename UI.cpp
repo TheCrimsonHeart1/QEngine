@@ -98,10 +98,7 @@ void RenderGUI(std::vector<Sprite>& sprites) {
     }
 
     ImGui::End(); // End Sprite Manager
-
-    // ==============================
-    // Build & Export Window
-    // ==============================
+    
     ImGui::Begin("Build & Export");
 
     if (ImGui::Button("Run")) {

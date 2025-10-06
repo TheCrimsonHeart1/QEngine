@@ -37,6 +37,8 @@ add_executable(QEngine
         AssetManager.h
         Shader.cpp
         Shader.h
+        Collision.h
+        Collision.cpp
 )
 
 # Link against libraries

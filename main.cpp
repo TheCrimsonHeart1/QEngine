@@ -287,9 +287,7 @@ int main(int argc, char** argv) {
 
     std::cout << "All systems initialized. Starting main loop..." << std::endl;
     #if !GAME_MODE
-    // -----------------------------------------------------------
-    //  If GAME_MODE is off (runtime), run main.lua automatically
-    // -----------------------------------------------------------
+
     std::string mainScriptPath = (assetFolder / "scripts" / "main.lua").string();
 
     std::cout << "Running game script: " << mainScriptPath << std::endl;
