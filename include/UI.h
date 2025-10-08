@@ -2,7 +2,7 @@
 #define UI_H
 
 #include <vector>
-#include "Sprite.h"
+#include "../include/Sprite.h"
 
 void RenderGUI(std::vector<Sprite>& sprites);
 

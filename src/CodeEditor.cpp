@@ -1,9 +1,9 @@
-#include "CodeEditor.h"
+#include "../include/CodeEditor.h"
 #include "imgui.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-#include "AssetManager.h"  // Provides assetFolder and AssetPath
+#include "../include/AssetManager.h"
 
 extern std::filesystem::path assetFolder;
 extern std::string AssetPath(const std::string& relativePath);

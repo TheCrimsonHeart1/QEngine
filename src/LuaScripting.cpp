@@ -3,15 +3,15 @@ extern "C" {
 #include <lauxlib.h>
 #include <lualib.h>
 }
-#include "TextureLoader.h"
+#include "../include/TextureLoader.h"
 #include <vector>
-#include "Sprite.h"
+#include "../include/Sprite.h"
 #include <GLFW/glfw3.h>
-#include "LuaScripting.h"
+#include "../include/LuaScripting.h"
 #include <fstream>
 #include <iostream>
 #include <filesystem>
-#include "Collision.h"
+#include "../include/Collision.h"
 
 // The sprite vector from your engine (accessible to Lua)
 extern std::vector<Sprite> sprites;

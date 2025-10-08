@@ -1,4 +1,4 @@
-#include "TextureLoader.h"
+#include "../include/TextureLoader.h"
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <GL/glew.h> // or glad

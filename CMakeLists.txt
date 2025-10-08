@@ -20,25 +20,27 @@ find_package(Lua REQUIRED)
 
 # Source files
 add_executable(QEngine
-        main.cpp
-        TextureLoader.cpp
-        TextureLoader.h
-        UI.cpp
-        UI.h
-        Sprite.h
-        LuaScripting.cpp
-        LuaScripting.h
-        CodeEditor.cpp
-        CodeEditor.h
-        TextEditor.cpp
-        TextEditor.h
-        TextEditor.cpp
-        AssetManager.cpp
-        AssetManager.h
-        Shader.cpp
-        Shader.h
-        Collision.h
-        Collision.cpp
+        src/main.cpp
+        src/TextureLoader.cpp
+        include/TextureLoader.h
+        src/UI.cpp
+        include/UI.h
+        include/Sprite.h
+        src/LuaScripting.cpp
+        include/LuaScripting.h
+        src/CodeEditor.cpp
+        include/CodeEditor.h
+        src/TextEditor.cpp
+        include/TextEditor.h
+        src/TextEditor.cpp
+        src/AssetManager.cpp
+        include/AssetManager.h
+        src/Shader.cpp
+        include/Shader.h
+        include/Collision.h
+        src/Collision.cpp
+        src/animation.cpp
+        src/animation.h
 )
 
 # Link against libraries

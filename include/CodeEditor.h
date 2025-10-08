@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "TextEditor.h"  // Include ImGuiColorTextEdit
+#include "TextEditor.h"
 
 struct CodeEditor {
     TextEditor editor;        // The syntax-highlighted editor

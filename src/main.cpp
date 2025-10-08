@@ -30,13 +30,13 @@ extern "C" {
 }
 
 // Project headers
-#include "TextureLoader.h"
-#include "UI.h"
-#include "Sprite.h"
-#include "Shader.h"
-#include "CodeEditor.h"
-#include "LuaScripting.h"
-#include "AssetManager.h"
+#include "../include/TextureLoader.h"
+#include "../include/UI.h"
+#include "../include/Sprite.h"
+#include "../include/Shader.h"
+#include "../include/CodeEditor.h"
+#include "../include/LuaScripting.h"
+#include "../include/AssetManager.h"
 
 // Global state
 CodeEditor luaEditor;

@@ -1,12 +1,12 @@
-#include "UI.h"
-#include "TextureLoader.h"
-#include "Sprite.h"
-#include "imgui.h"
+#include "../include/UI.h"
+#include "../include/TextureLoader.h"
+#include "../include/Sprite.h"
+#include "../include/imgui.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
-#include "AssetManager.h" // Provides assetFolder and AssetPath
+#include "../include/AssetManager.h"
 
 extern "C" {
 #include <lua.h>
