@@ -14,6 +14,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(PNG REQUIRED)
 
 
 find_package(Lua REQUIRED)
@@ -40,7 +41,7 @@ add_executable(QEngine
         include/Collision.h
         src/Collision.cpp
         src/animation.cpp
-        src/animation.h
+        include/animation.h
 )
 
 # Link against libraries

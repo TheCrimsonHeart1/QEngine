@@ -295,14 +295,47 @@ int LuaSetSpriteAnimation(lua_State* L) {
     lua_pushboolean(L, true);
     return 1;
 }
+// Change sprite texture directly using GLuint
+int LuaSetSpriteTexture(lua_State* L) {
+    int spriteIndex = (int)luaL_checkinteger(L, 1);
+    GLuint texID = (GLuint)luaL_checkinteger(L, 2);
+
+    if (spriteIndex < 0 || spriteIndex >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    // Delete old texture if needed
+    glDeleteTextures(1, &sprites[spriteIndex].textureID);
+    sprites[spriteIndex].textureID = texID;
+
+    lua_pushboolean(L, true);
+    return 1;
+}
+int LuaGetSpritePosition(lua_State* L) {
+    int index = (int)luaL_checkinteger(L, 1);
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_newtable(L);
+    lua_pushnumber(L, sprites[index].x);
+    lua_rawseti(L, -2, 1);
+    lua_pushnumber(L, sprites[index].y);
+    lua_rawseti(L, -2, 2);
+    return 1;
+}
+
 
 // ... existing code ...
 
 void registerLuaFunctions() {
+    lua_register(L, "GetSpritePosition", LuaGetSpritePosition);
     lua_register(L, "LoadTexture", LuaLoadTexture);
     lua_register(L, "MoveTexture", LuaMoveTexture);
     lua_register(L, "IsKeyPressed", LuaIsKeyPressed);
     lua_register(L, "ChangeTexture", ChangeTexture);
+    lua_register(L, "SetSpriteTexture", LuaSetSpriteTexture);
 
     lua_register(L, "CheckCollision", LuaCheckCollision);
     lua_register(L, "FindCollision", LuaFindCollision);
