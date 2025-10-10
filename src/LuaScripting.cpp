@@ -4,6 +4,7 @@ extern "C" {
 #include <lualib.h>
 }
 #include "../include/TextureLoader.h"
+#include "../include/animation.h"
 #include <vector>
 #include "../include/Sprite.h"
 #include <GLFW/glfw3.h>
@@ -197,9 +198,105 @@ int ChangeTexture(lua_State* L) {
     return 1;
 }
 
+
 void SetLuaWindow(GLFWwindow* window) {
     g_window = window;
 }
+
+int LuaCreateAnimation(lua_State* L) {
+    bool loop = lua_toboolean(L, 1);
+    int animIndex = AnimationManager::CreateAnimation(loop);
+    lua_pushinteger(L, animIndex);
+    return 1;
+}
+
+int LuaAddAnimationFrame(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    const char* relativePath = luaL_checkstring(L, 2);
+    float duration = (float)luaL_checknumber(L, 3);
+
+    std::string fullPath = relativePath;
+    if (!assetFolder.empty()) {
+        fullPath = AssetPath(relativePath);
+    }
+
+    GLuint tex = LoadTexture(fullPath.c_str());
+    if (!tex) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    bool success = AnimationManager::AddFrameToAnimation(animIndex, tex, duration);
+    lua_pushboolean(L, success);
+    return 1;
+}
+
+int LuaUpdateAnimation(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    float deltaTime = (float)luaL_checknumber(L, 2);
+    AnimationManager::UpdateAnimation(animIndex, deltaTime);
+    return 0;
+}
+
+int LuaPlayAnimation(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    AnimationManager::PlayAnimation(animIndex);
+    return 0;
+}
+
+int LuaPauseAnimation(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    AnimationManager::PauseAnimation(animIndex);
+    return 0;
+}
+
+int LuaStopAnimation(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    AnimationManager::StopAnimation(animIndex);
+    return 0;
+}
+
+int LuaResetAnimation(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    AnimationManager::ResetAnimation(animIndex);
+    return 0;
+}
+
+int LuaGetAnimationTexture(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    GLuint textureID = AnimationManager::GetAnimationTexture(animIndex);
+    lua_pushinteger(L, textureID);
+    return 1;
+}
+
+int LuaIsAnimationFinished(lua_State* L) {
+    int animIndex = (int)luaL_checkinteger(L, 1);
+    bool finished = AnimationManager::IsAnimationFinished(animIndex);
+    lua_pushboolean(L, finished);
+    return 1;
+}
+
+int LuaSetSpriteAnimation(lua_State* L) {
+    int spriteIndex = (int)luaL_checkinteger(L, 1);
+    int animIndex = (int)luaL_checkinteger(L, 2);
+
+    if (spriteIndex < 0 || spriteIndex >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    GLuint textureID = AnimationManager::GetAnimationTexture(animIndex);
+    if (textureID == 0) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    sprites[spriteIndex].textureID = textureID;
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+// ... existing code ...
 
 void registerLuaFunctions() {
     lua_register(L, "LoadTexture", LuaLoadTexture);
@@ -212,6 +309,18 @@ void registerLuaFunctions() {
     lua_register(L, "FindAllCollisions", LuaFindAllCollisions);
     lua_register(L, "PointInSprite", LuaPointInSprite);
     lua_register(L, "ResolveCollision", LuaResolveCollision);
+
+    // Animation functions
+    lua_register(L, "CreateAnimation", LuaCreateAnimation);
+    lua_register(L, "AddAnimationFrame", LuaAddAnimationFrame);
+    lua_register(L, "UpdateAnimation", LuaUpdateAnimation);
+    lua_register(L, "PlayAnimation", LuaPlayAnimation);
+    lua_register(L, "PauseAnimation", LuaPauseAnimation);
+    lua_register(L, "StopAnimation", LuaStopAnimation);
+    lua_register(L, "ResetAnimation", LuaResetAnimation);
+    lua_register(L, "GetAnimationTexture", LuaGetAnimationTexture);
+    lua_register(L, "IsAnimationFinished", LuaIsAnimationFinished);
+    lua_register(L, "SetSpriteAnimation", LuaSetSpriteAnimation);
 }
 
 bool RunLuaFile(const std::string& filepath) {
