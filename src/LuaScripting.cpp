@@ -13,6 +13,7 @@ extern "C" {
 #include <iostream>
 #include <filesystem>
 #include "../include/Collision.h"
+#include <SDL3/SDL.h>
 
 // The sprite vector from your engine (accessible to Lua)
 extern std::vector<Sprite> sprites;
@@ -325,6 +326,21 @@ int LuaGetSpritePosition(lua_State* L) {
     lua_rawseti(L, -2, 2);
     return 1;
 }
+int LuaSetSpriteSize(lua_State* L) {
+    int index = (int)luaL_checkinteger(L, 1);
+    float width = (float)luaL_checknumber(L, 2);
+    float height = (float)luaL_checknumber(L, 3);
+
+    if (index < 0 || index >= (int)sprites.size()) {
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    sprites[index].width = width;
+    sprites[index].height = height;
+    lua_pushboolean(L, true);
+    return 1;
+}
 
 
 // ... existing code ...
@@ -336,6 +352,7 @@ void registerLuaFunctions() {
     lua_register(L, "IsKeyPressed", LuaIsKeyPressed);
     lua_register(L, "ChangeTexture", ChangeTexture);
     lua_register(L, "SetSpriteTexture", LuaSetSpriteTexture);
+    lua_register(L, "SetSpriteSize", LuaSetSpriteSize);
 
     lua_register(L, "CheckCollision", LuaCheckCollision);
     lua_register(L, "FindCollision", LuaFindCollision);
